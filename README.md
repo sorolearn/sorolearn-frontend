@@ -4,22 +4,6 @@ SoroLearn is an open-source, interactive education platform that teaches develop
 
 ---
 
-## Table of Contents
-
-- [Why SoroLearn](#why-sorolearn)
-- [Features](#features)
-- [Learning Paths](#learning-paths)
-- [Architecture](#architecture)
-- [Project Structure](#project-structure)
-- [Getting Started](#getting-started)
-- [Content Structure](#content-structure)
-- [Contributing Content](#contributing-content)
-- [Roadmap](#roadmap)
-- [Contributing](#contributing)
-- [License](#license)
-
----
-
 ## Why SoroLearn
 
 Soroban is unique in the blockchain world — it uses Rust and WebAssembly instead of Solidity and the EVM. This means every existing Solidity tutorial, every Ethereum course, every CryptoZombies-style guide is irrelevant to someone learning Soroban. Developers starting on Stellar have almost nowhere to go beyond the official docs.
@@ -111,26 +95,31 @@ At the same time, the Stellar Development Foundation and the Drips Wave program 
 
 ```
 sorolearn/
-├── package.json
-├── src/
-│   ├── app/                      # Next.js App Router
-│   │   ├── page.tsx              # Home / course catalog
-│   │   ├── course/
-│   │   │   └── [slug]/page.tsx   # Individual lesson page
-│   │   └── leaderboard/page.tsx
-│   ├── components/
-│   │   ├── Editor.tsx            # Monaco-based code editor
-│   │   ├── TestRunner.tsx        # Challenge auto-grader UI
-│   │   └── CourseCard.tsx
-│   ├── content/                  # Lesson and challenge content (MDX)
-│   │   ├── beginner/
-│   │   ├── intermediate/
-│   │   └── advanced/
-│   └── lib/
-│       ├── sandbox.ts            # In-browser Soroban execution
-│       └── stellar.ts            # NFT certificate minting
+├── contract/
+│   └── certificate/              # Soroban contract: on-chain completion certificates
+│       ├── Cargo.toml
+│       └── src/
+├── frontend/
+│   ├── package.json
+│   ├── src/
+│   │   ├── app/                  # Next.js App Router
+│   │   │   ├── page.tsx          # Home / course catalog
+│   │   │   ├── course/
+│   │   │   │   └── [slug]/[lessonSlug]/page.tsx
+│   │   │   ├── leaderboard/page.tsx
+│   │   │   └── certificate/page.tsx
+│   │   ├── components/
+│   │   │   ├── Editor.tsx        # In-browser code editor
+│   │   │   └── LessonView.tsx    # Challenge, editor, test runner, hints
+│   │   ├── content/               # Lesson content (Markdown)
+│   │   │   ├── beginner/
+│   │   │   ├── intermediate/
+│   │   │   └── advanced/
+│   │   └── lib/
+│   │       ├── courses.ts        # Curriculum registry
+│   │       └── stellar.ts        # Certificate NFT minting
+│   └── public/
 ├── CONTRIBUTING.md
-├── LICENSE
 └── README.md
 ```
 
@@ -141,23 +130,32 @@ sorolearn/
 ### Prerequisites
 
 - Node.js 20+
+- Rust + the `wasm32-unknown-unknown` target and `stellar` CLI, if you're working on `contract/`
 
-### Run Locally
+### Run the frontend locally
 
 ```bash
 git clone https://github.com/your-org/sorolearn.git
-cd sorolearn
+cd sorolearn/frontend
 npm install
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
 
+### Build and test the contract
+
+```bash
+cd sorolearn/contract/certificate
+cargo test
+stellar contract build
+```
+
 ---
 
 ## Content Structure
 
-Each lesson lives in `src/content/` as an MDX file with the following frontmatter:
+Each lesson lives in `frontend/src/content/` as an MDX file with the following frontmatter:
 
 ```mdx
 ---
@@ -201,7 +199,7 @@ impl MyContract {
 
 ## Contributing Content
 
-The best way to contribute is to add new lessons and challenges. All content lives in `src/content/` as MDX files. You don't need to know how the platform works — just write a lesson following the structure above and open a pull request.
+The best way to contribute is to add new lessons and challenges. All content lives in `frontend/src/content/` as MDX files. You don't need to know how the platform works — just write a lesson following the structure above and open a pull request.
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for the full content guidelines.
 
@@ -225,7 +223,3 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for the full content guidelines.
 ## Contributing
 
 Contributions welcome — whether code, lesson content, or design. See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
-
-## License
-
-MIT — see [LICENSE](./LICENSE).
