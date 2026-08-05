@@ -41,8 +41,11 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
+    // Reading localStorage during render would mismatch the server-rendered
+    // DEFAULT_STATE markup, so this syncs in after mount instead.
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       if (raw) setState({ ...DEFAULT_STATE, ...JSON.parse(raw) });
     } catch {
       // ignore malformed local storage
