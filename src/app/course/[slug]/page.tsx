@@ -3,11 +3,12 @@ import { getCourse } from "@/lib/courses";
 import { notFound } from "next/navigation";
 
 interface Props {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
-export default function CoursePage({ params }: Props) {
-  const course = getCourse(params.slug);
+export default async function CoursePage({ params }: Props) {
+  const { slug } = await params;
+  const course = getCourse(slug);
   if (!course) notFound();
 
   return (

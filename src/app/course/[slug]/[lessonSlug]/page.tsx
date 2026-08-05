@@ -3,12 +3,13 @@ import LessonView from "@/components/LessonView";
 import { getCourse, getLesson } from "@/lib/courses";
 
 interface Props {
-  params: { slug: string; lessonSlug: string };
+  params: Promise<{ slug: string; lessonSlug: string }>;
 }
 
-export default function LessonPage({ params }: Props) {
-  const course = getCourse(params.slug);
-  const lesson = getLesson(params.slug, params.lessonSlug);
+export default async function LessonPage({ params }: Props) {
+  const { slug, lessonSlug } = await params;
+  const course = getCourse(slug);
+  const lesson = getLesson(slug, lessonSlug);
   if (!course || !lesson) notFound();
 
   return <LessonView course={course} lesson={lesson} />;
