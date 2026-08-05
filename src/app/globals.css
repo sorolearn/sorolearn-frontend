@@ -3,11 +3,44 @@
 @tailwind utilities;
 
 :root {
-  --foreground: #ededed;
-  --background: #0a0a0a;
+  --color-bg: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f6f7f9;
+  --color-text: #16181d;
+  --color-text-muted: #5b6270;
+  --color-border: #e4e7ec;
+  --color-accent: #c2255c;
+  --color-accent-hover: #9e1e4a;
+  --color-accent-100: #fce8ef;
+  --color-accent-700: #7a1638;
+  --color-code-bg: #16181d;
+  --color-code-text: #e7ecf5;
+  --radius-card: 14px;
+  --radius-btn: 10px;
+  --radius-pill: 999px;
+  --shadow-card: 0 1px 2px rgba(16, 24, 40, 0.04), 0 2px 8px rgba(16, 24, 40, 0.06);
+  --shadow-card-hover: 0 4px 10px rgba(16, 24, 40, 0.06), 0 12px 24px rgba(16, 24, 40, 0.09);
+}
+
+:root[data-theme="dark"] {
+  --color-bg: #0f1117;
+  --color-surface: #171922;
+  --color-surface-alt: #1d2029;
+  --color-text: #f3f4f6;
+  --color-text-muted: #9ca3af;
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-accent-100: rgba(194, 37, 92, 0.18);
+  --color-accent-700: #f4a6c4;
+  --color-code-bg: #000000;
+  --color-code-text: #e7ecf5;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  color: var(--color-text);
+  background: var(--color-bg);
+  transition: background-color 0.15s, color 0.15s;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-accent) 25%, transparent);
 }
