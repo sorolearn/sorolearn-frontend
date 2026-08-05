@@ -1,6 +1,6 @@
 # Authorization & require_auth()
 
-**Difficulty:** Intermediate | **Time:** ~30 minutes
+**Difficulty:** Intermediate | **Time:** ~25 minutes
 
 ## What You'll Learn
 

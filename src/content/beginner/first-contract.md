@@ -1,6 +1,6 @@
 # Your First Soroban Contract
 
-**Difficulty:** Beginner | **Time:** ~20 minutes
+**Difficulty:** Beginner | **Time:** ~30 minutes
 
 ## What You'll Learn
 

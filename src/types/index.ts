@@ -4,9 +4,13 @@ export interface Lesson {
   slug: string;
   title: string;
   description: string;
+  intro: string;
   difficulty: Difficulty;
   estimatedMinutes: number;
   order: number;
+  challenge?: string;
+  starterCode?: string;
+  hints?: string[];
 }
 
 export interface Course {
@@ -28,4 +32,5 @@ export interface LeaderboardEntry {
   username: string;
   points: number;
   coursesCompleted: number;
+  isYou?: boolean;
 }

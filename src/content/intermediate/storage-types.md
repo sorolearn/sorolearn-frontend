@@ -1,6 +1,6 @@
 # Storage in Soroban
 
-**Difficulty:** Beginner | **Time:** ~25 minutes
+**Difficulty:** Intermediate | **Time:** ~20 minutes
 
 ## What You'll Learn
 
