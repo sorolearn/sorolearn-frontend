@@ -64,6 +64,9 @@ At the same time, the Stellar Development Foundation and the Drips Wave program 
 
 ---
 
+## Contract Details
+Contract ID: `CCVFIMTLHN2YFVKFITJYU4PWDIGNG2Q7AWWF4GPKBUBQOJEOGRDTIK5K`
+- [View on Stellar Expert](https://stellar.expert/explorer/testnet/contract/CCVFIMTLHN2YFVKFITJYU4PWDIGNG2Q7AWWF4GPKBUBQOJEOGRDTIK5K)
 ## Architecture
 
 ```
@@ -126,32 +129,6 @@ sorolearn/
 ---
 
 ## Getting Started
-
-### Prerequisites
-
-- Node.js 20+
-- Rust + the `wasm32-unknown-unknown` target and `stellar` CLI, if you're working on `contract/`
-
-### Run the frontend locally
-
-```bash
-git clone https://github.com/your-org/sorolearn.git
-cd sorolearn/frontend
-npm install
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000).
-
-### Build and test the contract
-
-```bash
-cd sorolearn/contract/certificate
-cargo test
-stellar contract build
-```
-
----
 
 ## Content Structure
 
