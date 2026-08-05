@@ -8,7 +8,7 @@ SoroLearn is an open-source, interactive education platform that teaches develop
 
 Soroban is unique in the blockchain world — it uses Rust and WebAssembly instead of Solidity and the EVM. This means every existing Solidity tutorial, every Ethereum course, every CryptoZombies-style guide is irrelevant to someone learning Soroban. Developers starting on Stellar have almost nowhere to go beyond the official docs.
 
-At the same time, the Stellar Development Foundation and the Drips Wave program are actively trying to onboard new developers into the ecosystem. SoroLearn is the community-owned answer to that need: a structured, interactive, beginner-to-expert curriculum built by Soroban developers, for Soroban developers.
+At the same time, the Stellar Development Foundation is actively trying to onboard new developers into the ecosystem. SoroLearn is the community-owned answer to that need: a structured, interactive, beginner-to-expert curriculum built by Soroban developers, for Soroban developers.
 
 ---
 
