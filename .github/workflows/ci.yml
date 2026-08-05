@@ -49,7 +49,7 @@ jobs:
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: wasm32-unknown-unknown
+          targets: wasm32v1-none
 
       - name: Cache cargo
         uses: actions/cache@v4
@@ -62,3 +62,6 @@ jobs:
 
       - name: Test
         run: cargo test
+
+      - name: Build wasm
+        run: cargo build --target wasm32v1-none --release
