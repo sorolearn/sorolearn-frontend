@@ -29,10 +29,11 @@ export default function CertificatePage() {
             </div>
             <div className="text-2xl font-extrabold text-center text-white">{BEGINNER.title}</div>
             <div className="text-[13px] text-white/85">Awarded to you</div>
-            {certMinted && <div className="text-[11px] text-white/85">tx: 7f3a91c0…e21b</div>}
           </div>
           {certMinted ? (
-            <div className="text-[13px] text-ink-muted">Minted to your Stellar wallet ✓</div>
+            <div className="text-[13px] text-ink-muted">
+              Certificate unlocked (minting to a Stellar wallet isn&apos;t connected yet)
+            </div>
           ) : (
             <button
               type="button"
