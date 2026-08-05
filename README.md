@@ -1,10 +1,5 @@
 # SoroLearn
 
-> Interactive learning platform for Soroban smart contract development on Stellar.
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
-[![Built for Stellar](https://img.shields.io/badge/Built%20for-Stellar-black)](https://stellar.org)
-
 SoroLearn is an open-source, interactive education platform that teaches developers how to build Soroban smart contracts in Rust — through hands-on coding challenges, in-browser execution, structured learning paths, and community-contributed content. No local environment needed to start learning.
 
 ---
