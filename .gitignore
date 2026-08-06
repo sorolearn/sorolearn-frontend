@@ -3,6 +3,4 @@ node_modules/
 .env
 .env.local
 dist/
-# generated bindings output is committed so `npm install` works after a fresh clone
-!contract/certificate/bindings/dist/
 *.tsbuildinfo
