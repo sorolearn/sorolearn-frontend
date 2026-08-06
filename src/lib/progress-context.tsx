@@ -11,7 +11,7 @@ interface ProgressState {
   code: Record<string, string>;
   testStatus: Record<string, TestStatus>;
   hintsShown: Record<string, number>;
-  certMinted: boolean;
+  walletAddress: string | null;
 }
 
 const STORAGE_KEY = "sorolearn-progress";
@@ -22,7 +22,7 @@ const DEFAULT_STATE: ProgressState = {
   code: {},
   testStatus: {},
   hintsShown: {},
-  certMinted: false,
+  walletAddress: null,
 };
 
 interface ProgressContextValue extends ProgressState {
@@ -31,7 +31,7 @@ interface ProgressContextValue extends ProgressState {
   setCode: (lessonId: string, value: string) => void;
   runTests: (lessonId: string, code: string) => void;
   unlockHint: (lessonId: string, hintCount: number) => void;
-  mintCertificate: () => void;
+  setWalletAddress: (address: string | null) => void;
 }
 
 const ProgressContext = createContext<ProgressContextValue | null>(null);
@@ -84,7 +84,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
           if (shown >= hintCount) return s;
           return { ...s, hintsShown: { ...s.hintsShown, [lessonId]: shown + 1 } };
         }),
-      mintCertificate: () => setState((s) => ({ ...s, certMinted: true })),
+      setWalletAddress: (address) => setState((s) => ({ ...s, walletAddress: address })),
     }),
     [state]
   );
