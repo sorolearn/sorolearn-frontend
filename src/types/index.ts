@@ -1,5 +1,26 @@
 export type Difficulty = "beginner" | "intermediate" | "advanced";
 
+export interface RequiredFunction {
+  name: string;
+  /** Substrings expected to appear somewhere in the parameter list, e.g. "name: String". */
+  params?: string[];
+}
+
+export interface LessonChecks {
+  /** Attribute macros that must appear verbatim, e.g. "#[contract]". */
+  requiredAttributes?: string[];
+  requiredFunctions?: RequiredFunction[];
+  /** Loose, case-insensitive substrings the implementation's output/logic should contain. */
+  requiredSubstrings?: string[];
+  /** Fail if todo!()/unimplemented!()/"your code here" is still present. */
+  forbidPlaceholders?: boolean;
+}
+
+export interface GradeResult {
+  passed: boolean;
+  messages: string[];
+}
+
 export interface Lesson {
   slug: string;
   title: string;
@@ -11,6 +32,7 @@ export interface Lesson {
   challenge?: string;
   starterCode?: string;
   hints?: string[];
+  checks?: LessonChecks;
 }
 
 export interface Course {
@@ -19,12 +41,6 @@ export interface Course {
   description: string;
   difficulty: Difficulty;
   lessons: Lesson[];
-}
-
-export interface ChallengeResult {
-  passed: boolean;
-  output: string;
-  errorMessage?: string;
 }
 
 export interface LeaderboardEntry {
