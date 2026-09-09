@@ -1,14 +1,18 @@
-import type { Course, Lesson } from "@/types";
+import type { Course, Lesson, LessonChecks } from "@/types";
+import { defaultChecks } from "@/lib/grader";
 
-const CONTRACT_STARTER = `#![no_std]
-use soroban_sdk::{contract, contractimpl, Env};
+const GREET_STARTER = `#![no_std]
+use soroban_sdk::{contract, contractimpl, Env, String};
 
 #[contract]
-pub struct MyContract;
+pub struct GreetContract;
 
 #[contractimpl]
-impl MyContract {
-    // your code here
+impl GreetContract {
+    pub fn greet(env: Env, name: String) -> String {
+        // your code here
+        todo!()
+    }
 }
 `;
 
@@ -68,16 +72,23 @@ export const COURSES: Course[] = [
         slug: "first-contract",
         title: "Writing your first Soroban #[contract]",
         description: "Write, deploy, and invoke your first Soroban smart contract.",
-        intro: "Every Soroban contract starts the same way: a #[contract] struct and a #[contractimpl] block. Here you will write one that stores and retrieves a single number.",
+        intro: "Every Soroban contract starts the same way: a #[contract] struct and a #[contractimpl] block. Here you will write one with a single greet function.",
         difficulty: "beginner",
         estimatedMinutes: 30,
         order: 4,
-        challenge: "Write a Soroban contract that stores and retrieves a number.",
-        starterCode: CONTRACT_STARTER,
+        challenge:
+          'Write a Soroban contract with a function `greet` that takes a `name: String` and returns `"Welcome to Soroban, <name>!"`.',
+        starterCode: GREET_STARTER,
         hints: [
-          "Hint 1: The struct is just a marker — the logic lives in the #[contractimpl] block.",
-          "Hint 2: Use env.storage().instance() to set and get the number.",
+          "Hint 1: The parameter is `name: String` and the return type is `String` — match the signature in the starter code exactly.",
+          'Hint 2: Build the greeting with `String::from_str(&env, &format!("Welcome to Soroban, {}!", name))`, following the pattern from the lesson above.',
         ],
+        checks: {
+          requiredAttributes: ["#[contract]", "#[contractimpl]"],
+          requiredFunctions: [{ name: "greet", params: ["name"] }],
+          requiredSubstrings: ["Welcome to Soroban"],
+          forbidPlaceholders: true,
+        },
       },
     ],
   },
@@ -229,6 +240,10 @@ export function hintsFor(lesson: Lesson): string[] {
 
 export function challengeFor(lesson: Lesson): string {
   return lesson.challenge ?? "Follow the lesson above, then edit the contract until Run Tests passes.";
+}
+
+export function checksFor(lesson: Lesson): LessonChecks {
+  return lesson.checks ?? defaultChecks();
 }
 
 export function totalLessonCount(): number {

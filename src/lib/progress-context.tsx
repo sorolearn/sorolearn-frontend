@@ -1,6 +1,8 @@
 "use client";
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { gradeCode } from "@/lib/grader";
+import type { LessonChecks } from "@/types";
 
 type Theme = "light" | "dark";
 type TestStatus = "running" | "pass" | "fail";
@@ -10,6 +12,7 @@ interface ProgressState {
   completed: Record<string, boolean>;
   code: Record<string, string>;
   testStatus: Record<string, TestStatus>;
+  testMessages: Record<string, string[]>;
   hintsShown: Record<string, number>;
   walletAddress: string | null;
 }
@@ -21,6 +24,7 @@ const DEFAULT_STATE: ProgressState = {
   completed: {},
   code: {},
   testStatus: {},
+  testMessages: {},
   hintsShown: {},
   walletAddress: null,
 };
@@ -29,7 +33,7 @@ interface ProgressContextValue extends ProgressState {
   toggleTheme: () => void;
   getCode: (lessonId: string, fallback: string) => string;
   setCode: (lessonId: string, value: string) => void;
-  runTests: (lessonId: string, code: string) => void;
+  runTests: (lessonId: string, code: string, checks?: LessonChecks) => void;
   unlockHint: (lessonId: string, hintCount: number) => void;
   setWalletAddress: (address: string | null) => void;
 }
@@ -67,16 +71,17 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       getCode: (lessonId, fallback) => state.code[lessonId] ?? fallback,
       setCode: (lessonId, value) =>
         setState((s) => ({ ...s, code: { ...s.code, [lessonId]: value } })),
-      runTests: (lessonId, code) => {
+      runTests: (lessonId, code, checks) => {
         setState((s) => ({ ...s, testStatus: { ...s.testStatus, [lessonId]: "running" } }));
         setTimeout(() => {
-          const didPass = code.includes("impl") && code.trim().length > 20;
+          const { passed, messages } = gradeCode(code, checks);
           setState((s) => ({
             ...s,
-            testStatus: { ...s.testStatus, [lessonId]: didPass ? "pass" : "fail" },
-            completed: didPass ? { ...s.completed, [lessonId]: true } : s.completed,
+            testStatus: { ...s.testStatus, [lessonId]: passed ? "pass" : "fail" },
+            testMessages: { ...s.testMessages, [lessonId]: messages },
+            completed: passed ? { ...s.completed, [lessonId]: true } : s.completed,
           }));
-        }, 900);
+        }, 500);
       },
       unlockHint: (lessonId, hintCount) =>
         setState((s) => {

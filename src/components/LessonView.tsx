@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Editor from "@/components/Editor";
-import { COURSES, challengeFor, hintsFor, lessonId, starterCodeFor } from "@/lib/courses";
+import { COURSES, challengeFor, checksFor, hintsFor, lessonId, starterCodeFor } from "@/lib/courses";
 import { useProgress } from "@/lib/progress-context";
 import type { Course, Lesson } from "@/types";
 
@@ -13,10 +13,11 @@ const levelLabel: Record<string, string> = {
 };
 
 export default function LessonView({ course, lesson }: { course: Course; lesson: Lesson }) {
-  const { completed, getCode, setCode, testStatus, runTests, hintsShown, unlockHint } = useProgress();
+  const { completed, getCode, setCode, testStatus, testMessages, runTests, hintsShown, unlockHint } = useProgress();
   const id = lessonId(course.slug, lesson.slug);
   const code = getCode(id, starterCodeFor(lesson));
   const status = testStatus[id];
+  const messages = testMessages[id] ?? [];
   const hints = hintsFor(lesson);
   const shown = hintsShown[id] ?? 0;
 
@@ -77,17 +78,24 @@ export default function LessonView({ course, lesson }: { course: Course; lesson:
           <div className="flex items-center gap-4">
             <button
               type="button"
-              onClick={() => runTests(id, code)}
+              onClick={() => runTests(id, code, checksFor(lesson))}
               className="cursor-pointer px-5 py-2.5 bg-accent text-white font-bold text-sm rounded-btn hover:bg-accent-hover transition"
             >
               {status === "running" ? "Running…" : "Run Tests"}
             </button>
-            {status && status !== "running" && (
-              <div className="text-[13px] font-semibold text-accent">
-                {status === "pass" ? "✓ 2/2 tests passed" : "✗ Contract does not compile — check the impl block."}
-              </div>
+            {status === "pass" && (
+              <div className="text-[13px] font-semibold text-accent">✓ All checks passed</div>
             )}
           </div>
+          {status === "fail" && messages.length > 0 && (
+            <ul className="flex flex-col gap-1 list-none m-0 p-0">
+              {messages.map((message, i) => (
+                <li key={i} className="text-[13px] font-medium text-accent">
+                  ✗ {message}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
         <div className="flex flex-col gap-2.5">
