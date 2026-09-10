@@ -74,6 +74,29 @@ export const COURSES: Course[] = [
         difficulty: "beginner",
         estimatedMinutes: 20,
         order: 2,
+        challenge:
+          "Define a `Direction` enum (`North`, `South`, `East`, `West`), then write a function `opposite` that returns the opposite direction using a `match` expression.",
+        starterCode: `enum Direction {
+    North,
+    South,
+    East,
+    West,
+}
+
+fn opposite(dir: Direction) -> Direction {
+    // your code here
+    todo!()
+}
+`,
+        hints: [
+          "Hint 1: `match dir { Direction::North => ..., Direction::South => ..., ... }` — handle all four variants.",
+          "Hint 2: North's opposite is South, and East's opposite is West.",
+        ],
+        checks: {
+          requiredFunctions: [{ name: "opposite", params: ["dir"] }],
+          requiredSubstrings: ["match"],
+          forbidPlaceholders: true,
+        },
       },
       {
         slug: "error-handling-result-option",
