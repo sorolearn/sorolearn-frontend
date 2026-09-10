@@ -106,6 +106,22 @@ fn opposite(dir: Direction) -> Direction {
         difficulty: "beginner",
         estimatedMinutes: 20,
         order: 3,
+        challenge:
+          'Write a function `safe_divide` that takes two `i64` values, `a` and `b`, and returns `Result<i64, String>`: `Ok(a / b)` if `b` isn\'t zero, or `Err("division by zero".to_string())` if it is.',
+        starterCode: `fn safe_divide(a: i64, b: i64) -> Result<i64, String> {
+    // your code here
+    todo!()
+}
+`,
+        hints: [
+          "Hint 1: Check `if b == 0` first and return the `Err(...)` case early.",
+          "Hint 2: Otherwise return `Ok(a / b)`.",
+        ],
+        checks: {
+          requiredFunctions: [{ name: "safe_divide", params: ["a", "b"] }],
+          requiredSubstrings: ["Ok(", "Err("],
+          forbidPlaceholders: true,
+        },
       },
       {
         slug: "first-contract",
