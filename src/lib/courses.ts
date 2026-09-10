@@ -49,6 +49,22 @@ export const COURSES: Course[] = [
         difficulty: "beginner",
         estimatedMinutes: 25,
         order: 1,
+        challenge:
+          "Write a function `longest` that takes two string slices, `a: &str` and `b: &str`, and returns whichever is longer — without taking ownership of either argument.",
+        starterCode: `fn longest<'a>(a: &'a str, b: &'a str) -> &'a str {
+    // your code here
+    todo!()
+}
+`,
+        hints: [
+          "Hint 1: Compare `a.len()` and `b.len()` and return the longer `&str` — no need to allocate or clone anything.",
+          "Hint 2: Use `>=` (not `>`) so that ties consistently return `a`.",
+        ],
+        checks: {
+          requiredFunctions: [{ name: "longest", params: ["a", "b"] }],
+          requiredSubstrings: [".len()"],
+          forbidPlaceholders: true,
+        },
       },
       {
         slug: "structs-enums-pattern-matching",
