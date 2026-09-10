@@ -47,7 +47,14 @@ describe("gradeCode", () => {
       requiredFunctions: [{ name: "greet" }],
     });
     expect(result.passed).toBe(false);
-    expect(result.messages).toContain("Missing `pub fn greet(...)`.");
+    expect(result.messages).toContain("Missing `fn greet(...)`.");
+  });
+
+  it("accepts a plain `fn`, not just `pub fn`, for pre-contract lessons", () => {
+    const result = gradeCode("fn longest<'a>(a: &'a str, b: &'a str) -> &'a str { a }", {
+      requiredFunctions: [{ name: "longest", params: ["a", "b"] }],
+    });
+    expect(result.passed).toBe(true);
   });
 
   it("checks required function parameters separately from the signature", () => {

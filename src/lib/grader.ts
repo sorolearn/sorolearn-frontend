@@ -39,9 +39,11 @@ export function gradeCode(code: string, checks: LessonChecks = {}): GradeResult 
   }
 
   for (const fn of checks.requiredFunctions ?? []) {
-    const signature = new RegExp(`pub\\s+fn\\s+${fn.name}\\s*\\(`);
+    // `pub` is optional: contract methods need it, but the earlier plain-Rust
+    // fundamentals lessons (no #[contract] yet) use ordinary private fns.
+    const signature = new RegExp(`(?:pub\\s+)?fn\\s+${fn.name}\\s*(?:<[^>]*>)?\\s*\\(`);
     if (!signature.test(code)) {
-      messages.push(`Missing \`pub fn ${fn.name}(...)\`.`);
+      messages.push(`Missing \`fn ${fn.name}(...)\`.`);
       continue;
     }
     for (const param of fn.params ?? []) {
