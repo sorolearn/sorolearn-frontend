@@ -354,6 +354,40 @@ pub fn read_counter(env: Env, counter_id: Address) -> u32 {
         difficulty: "intermediate",
         estimatedMinutes: 25,
         order: 6,
+        challenge:
+          "Given the CounterContract below (already defined), write a test `test_increment` that registers it, calls increment() twice, and asserts the second call returns 2.",
+        starterCode: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Env};
+
+#[contract]
+pub struct CounterContract;
+
+#[contractimpl]
+impl CounterContract {
+    pub fn increment(env: Env) -> u32 {
+        let key = symbol_short!("COUNT");
+        let count: u32 = env.storage().instance().get(&key).unwrap_or(0) + 1;
+        env.storage().instance().set(&key, &count);
+        count
+    }
+}
+
+#[test]
+fn test_increment() {
+    // your code here
+    todo!()
+}
+`,
+        hints: [
+          "Hint 1: `let env = Env::default(); let id = env.register(CounterContract, ()); let client = CounterContractClient::new(&env, &id);`",
+          "Hint 2: Call `client.increment()` twice, keep the second return value, and `assert_eq!` it against 2.",
+        ],
+        checks: {
+          requiredAttributes: ["#[contract]", "#[contractimpl]"],
+          requiredFunctions: [{ name: "test_increment" }],
+          requiredSubstrings: ["Env::default()", "CounterContractClient", "assert_eq!"],
+          forbidPlaceholders: true,
+        },
       },
     ],
   },

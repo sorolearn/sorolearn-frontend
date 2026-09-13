@@ -50,7 +50,7 @@ describe("starterCodeFor", () => {
   });
 
   it("falls back to the generic starter otherwise", () => {
-    const lesson = getLesson("intermediate", "soroban-execution-model")!;
+    const lesson = getLesson("advanced", "amms-from-scratch")!;
     expect(starterCodeFor(lesson)).toContain("pub struct Contract;");
   });
 });
