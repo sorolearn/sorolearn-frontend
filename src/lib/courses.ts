@@ -315,6 +315,36 @@ impl TokenContract {
         difficulty: "intermediate",
         estimatedMinutes: 20,
         order: 5,
+        challenge:
+          "Given the CounterContract below (already defined), write a function `read_counter` that takes the deployed counter's address and returns its current count by calling the auto-generated CounterContractClient.",
+        starterCode: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env};
+
+#[contract]
+pub struct CounterContract;
+
+#[contractimpl]
+impl CounterContract {
+    pub fn get(env: Env) -> u32 {
+        env.storage().instance().get(&symbol_short!("COUNT")).unwrap_or(0)
+    }
+}
+
+pub fn read_counter(env: Env, counter_id: Address) -> u32 {
+    // your code here
+    todo!()
+}
+`,
+        hints: [
+          "Hint 1: Every #[contract] struct gets an auto-generated `<Name>Client` — here, `CounterContractClient`.",
+          "Hint 2: `CounterContractClient::new(&env, &counter_id).get()`.",
+        ],
+        checks: {
+          requiredAttributes: ["#[contract]", "#[contractimpl]"],
+          requiredFunctions: [{ name: "read_counter", params: ["counter_id"] }],
+          requiredSubstrings: ["CounterContractClient"],
+          forbidPlaceholders: true,
+        },
       },
       {
         slug: "testing-with-testutils",
