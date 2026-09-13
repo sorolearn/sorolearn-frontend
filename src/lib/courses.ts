@@ -161,6 +161,31 @@ fn opposite(dir: Direction) -> Direction {
         difficulty: "intermediate",
         estimatedMinutes: 25,
         order: 1,
+        challenge: "Write a function `now` that returns the current ledger's Unix timestamp, using `env.ledger().timestamp()`.",
+        starterCode: `#![no_std]
+use soroban_sdk::{contract, contractimpl, Env};
+
+#[contract]
+pub struct ClockContract;
+
+#[contractimpl]
+impl ClockContract {
+    pub fn now(env: Env) -> u64 {
+        // your code here
+        todo!()
+    }
+}
+`,
+        hints: [
+          "Hint 1: Chain state is reached through `env` — ledger info specifically lives under `env.ledger()`.",
+          "Hint 2: `env.ledger().timestamp()` already returns a `u64` — just return it directly.",
+        ],
+        checks: {
+          requiredAttributes: ["#[contract]", "#[contractimpl]"],
+          requiredFunctions: [{ name: "now", params: ["env"] }],
+          requiredSubstrings: ["env.ledger().timestamp()"],
+          forbidPlaceholders: true,
+        },
       },
       {
         slug: "storage-types",
