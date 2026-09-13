@@ -274,6 +274,38 @@ impl VaultContract {
         difficulty: "intermediate",
         estimatedMinutes: 25,
         order: 4,
+        challenge:
+          "Write a function `balance` that reads a `DataKey::Balance(id)` entry from persistent storage and returns the stored `i128`, defaulting to 0 if nothing has been stored for that address yet.",
+        starterCode: `#![no_std]
+use soroban_sdk::{contract, contractimpl, contracttype, Address, Env};
+
+#[derive(Clone)]
+#[contracttype]
+enum DataKey {
+    Balance(Address),
+}
+
+#[contract]
+pub struct TokenContract;
+
+#[contractimpl]
+impl TokenContract {
+    pub fn balance(env: Env, id: Address) -> i128 {
+        // your code here
+        todo!()
+    }
+}
+`,
+        hints: [
+          "Hint 1: Build the key with `DataKey::Balance(id)`, then read it with `env.storage().persistent().get(&key)`.",
+          "Hint 2: `.get(...)` returns an `Option` — `.unwrap_or(0)` gives you 0 for an address with no balance yet.",
+        ],
+        checks: {
+          requiredAttributes: ["#[contract]", "#[contractimpl]"],
+          requiredFunctions: [{ name: "balance", params: ["id"] }],
+          requiredSubstrings: ["unwrap_or"],
+          forbidPlaceholders: true,
+        },
       },
       {
         slug: "cross-contract-calls",
