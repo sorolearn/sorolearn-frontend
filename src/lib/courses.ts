@@ -170,6 +170,40 @@ fn opposite(dir: Direction) -> Direction {
         difficulty: "intermediate",
         estimatedMinutes: 20,
         order: 2,
+        challenge:
+          "Write a contract with two functions: `set_value(env, key: Symbol, value: i128)` — stores a value by key in persistent storage — and `get_value(env, key: Symbol) -> i128` — retrieves it, returning 0 if not set.",
+        starterCode: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Env, Symbol};
+
+#[contract]
+pub struct StorageContract;
+
+#[contractimpl]
+impl StorageContract {
+    pub fn set_value(env: Env, key: Symbol, value: i128) {
+        // your code here
+        todo!()
+    }
+
+    pub fn get_value(env: Env, key: Symbol) -> i128 {
+        // your code here
+        todo!()
+    }
+}
+`,
+        hints: [
+          "Hint 1: `env.storage().persistent().set(&key, &value)` writes; `env.storage().persistent().get(&key)` reads.",
+          "Hint 2: `get_value` should return 0 when nothing is stored yet — that's exactly what `.unwrap_or(0)` gives you.",
+        ],
+        checks: {
+          requiredAttributes: ["#[contract]", "#[contractimpl]"],
+          requiredFunctions: [
+            { name: "set_value", params: ["key", "value"] },
+            { name: "get_value", params: ["key"] },
+          ],
+          requiredSubstrings: ["persistent()"],
+          forbidPlaceholders: true,
+        },
       },
       {
         slug: "authorization",
@@ -179,6 +213,33 @@ fn opposite(dir: Direction) -> Direction {
         difficulty: "intermediate",
         estimatedMinutes: 25,
         order: 3,
+        challenge:
+          "Fix the vulnerable withdraw function below: it should accept a `caller: Address` parameter and call `env.require_auth(&caller)` before touching storage.",
+        starterCode: `#![no_std]
+use soroban_sdk::{contract, contractimpl, symbol_short, Env};
+
+#[contract]
+pub struct VaultContract;
+
+#[contractimpl]
+impl VaultContract {
+    // DANGEROUS: anyone can call this and drain the contract
+    pub fn withdraw(env: Env, amount: i128) {
+        let key = symbol_short!("BAL");
+        let balance: i128 = env.storage().persistent().get(&key).unwrap_or(0);
+        env.storage().persistent().set(&key, &(balance - amount));
+    }
+}
+`,
+        hints: [
+          "Hint 1: Add a `caller: Address` parameter to `withdraw`'s signature (you'll need `use soroban_sdk::Address;`).",
+          "Hint 2: Call `env.require_auth(&caller)` as the very first line, before reading or writing storage.",
+        ],
+        checks: {
+          requiredAttributes: ["#[contract]", "#[contractimpl]"],
+          requiredFunctions: [{ name: "withdraw", params: ["caller", "amount"] }],
+          requiredSubstrings: ["require_auth"],
+        },
       },
       {
         slug: "sep-41-tokens",
