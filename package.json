@@ -18,7 +18,11 @@
     "rust"
   ],
   "license": "MIT",
+  "overrides": {
+    "dompurify": "^3.4.13"
+  },
   "dependencies": {
+    "@monaco-editor/react": "^4.7.0",
     "@stellar/freighter-api": "^6.0.1",
     "@stellar/stellar-sdk": "^14.5.0",
     "next": "^16.3.0",
