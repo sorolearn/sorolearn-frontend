@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import Editor from "@/components/Editor";
 import { COURSES, challengeFor, checksFor, hintsFor, lessonId, starterCodeFor } from "@/lib/courses";
 import { useProgress } from "@/lib/progress-context";
@@ -13,13 +14,20 @@ const levelLabel: Record<string, string> = {
 };
 
 export default function LessonView({ course, lesson }: { course: Course; lesson: Lesson }) {
-  const { completed, getCode, setCode, testStatus, testMessages, runTests, hintsShown, unlockHint } = useProgress();
+  const { completed, getCode, setCode, testStatus, testMessages, runTests, hintsShown, unlockHint, theme } =
+    useProgress();
   const id = lessonId(course.slug, lesson.slug);
   const code = getCode(id, starterCodeFor(lesson));
   const status = testStatus[id];
   const messages = testMessages[id] ?? [];
   const hints = hintsFor(lesson);
   const shown = hintsShown[id] ?? 0;
+  const [resetCount, setResetCount] = useState(0);
+
+  function resetToStarter() {
+    setCode(id, starterCodeFor(lesson));
+    setResetCount((c) => c + 1);
+  }
 
   return (
     <div className="flex items-start">
@@ -73,8 +81,22 @@ export default function LessonView({ course, lesson }: { course: Course; lesson:
         </div>
 
         <div className="flex flex-col gap-2.5">
-          <div className="text-xs font-bold uppercase tracking-wide text-ink-muted">Editor</div>
-          <Editor defaultValue={code} onChange={(value) => setCode(id, value)} />
+          <div className="flex items-center justify-between">
+            <div className="text-xs font-bold uppercase tracking-wide text-ink-muted">Editor</div>
+            <button
+              type="button"
+              onClick={resetToStarter}
+              className="cursor-pointer text-xs font-semibold text-ink-muted hover:text-accent transition"
+            >
+              Reset to starter code
+            </button>
+          </div>
+          <Editor
+            key={`${id}-${resetCount}`}
+            defaultValue={code}
+            onChange={(value) => setCode(id, value)}
+            theme={theme}
+          />
           <div className="flex items-center gap-4">
             <button
               type="button"
