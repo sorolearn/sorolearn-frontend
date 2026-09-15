@@ -429,6 +429,24 @@ fn test_increment() {
         difficulty: "advanced",
         estimatedMinutes: 35,
         order: 2,
+        challenge:
+          "Write a function `is_undercollateralized` that takes collateral_value, debt_value, and min_collateral_ratio_bps (all i128) and returns true if the position's collateral ratio has fallen below the minimum. A position with zero debt is never undercollateralized.",
+        starterCode: `fn is_undercollateralized(collateral_value: i128, debt_value: i128, min_collateral_ratio_bps: i128) -> bool {
+    // your code here
+    todo!()
+}
+`,
+        hints: [
+          "Hint 1: Handle `debt_value == 0` first and return `false` — no debt means nothing is at risk.",
+          "Hint 2: Otherwise compare `collateral_value * 10000 / debt_value` against `min_collateral_ratio_bps`.",
+        ],
+        checks: {
+          requiredFunctions: [
+            { name: "is_undercollateralized", params: ["collateral_value", "debt_value", "min_collateral_ratio_bps"] },
+          ],
+          requiredSubstrings: ["10000"],
+          forbidPlaceholders: true,
+        },
       },
       {
         slug: "oracle-integration-pulsar",
