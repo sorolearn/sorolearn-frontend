@@ -405,6 +405,21 @@ fn test_increment() {
         difficulty: "advanced",
         estimatedMinutes: 35,
         order: 1,
+        challenge:
+          "Write a function `get_amount_out` that takes amount_in, reserve_in, and reserve_out (all i128) and returns the output amount using the constant-product formula: (amount_in * reserve_out) / (reserve_in + amount_in).",
+        starterCode: `fn get_amount_out(amount_in: i128, reserve_in: i128, reserve_out: i128) -> i128 {
+    // your code here
+    todo!()
+}
+`,
+        hints: [
+          "Hint 1: The formula is `amount_in * reserve_out / (reserve_in + amount_in)`.",
+          "Hint 2: Multiply before you divide — dividing first throws away precision integer math can't recover.",
+        ],
+        checks: {
+          requiredFunctions: [{ name: "get_amount_out", params: ["amount_in", "reserve_in", "reserve_out"] }],
+          forbidPlaceholders: true,
+        },
       },
       {
         slug: "lending-collateralization",
