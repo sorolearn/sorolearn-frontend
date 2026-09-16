@@ -519,6 +519,33 @@ fn get_price_or_default(env: Env, oracle_id: Address, asset: Symbol, default: i1
         difficulty: "advanced",
         estimatedMinutes: 30,
         order: 5,
+        challenge:
+          "Fix the vulnerable debit function below: use checked_sub and only write the new balance if the subtraction succeeds, panicking with a clear message (.expect(\"insufficient balance\")) otherwise.",
+        starterCode: `#![no_std]
+use soroban_sdk::{contract, contractimpl, Env, Symbol};
+
+#[contract]
+pub struct WalletContract;
+
+#[contractimpl]
+impl WalletContract {
+    // VULNERABLE: no check that \`balance\` actually covers \`amount\`
+    pub fn debit(env: Env, key: Symbol, amount: i128) {
+        // your code here
+        todo!()
+    }
+}
+`,
+        hints: [
+          "Hint 1: `balance.checked_sub(amount)` returns `None` on underflow instead of panicking at the wrong moment.",
+          'Hint 2: `.expect("insufficient balance")` on that Option turns a silent failure into a clear, intentional one.',
+        ],
+        checks: {
+          requiredAttributes: ["#[contract]", "#[contractimpl]"],
+          requiredFunctions: [{ name: "debit", params: ["key", "amount"] }],
+          requiredSubstrings: ["checked_sub"],
+          forbidPlaceholders: true,
+        },
       },
       {
         slug: "upgradeability-migration",
