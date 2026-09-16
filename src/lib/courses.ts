@@ -456,6 +456,36 @@ fn test_increment() {
         difficulty: "advanced",
         estimatedMinutes: 25,
         order: 3,
+        challenge:
+          "Given the OracleContract below (already defined), write a function `get_price_or_default` that calls its price(asset) method through OracleContractClient and returns `default` if no price is available.",
+        starterCode: `#![no_std]
+use soroban_sdk::{contract, contractimpl, Address, Env, Symbol};
+
+#[contract]
+pub struct OracleContract;
+
+#[contractimpl]
+impl OracleContract {
+    pub fn price(env: Env, asset: Symbol) -> Option<i128> {
+        env.storage().instance().get(&asset)
+    }
+}
+
+fn get_price_or_default(env: Env, oracle_id: Address, asset: Symbol, default: i128) -> i128 {
+    // your code here
+    todo!()
+}
+`,
+        hints: [
+          "Hint 1: `OracleContractClient::new(&env, &oracle_id).price(&asset)` returns an `Option<i128>`.",
+          "Hint 2: `.unwrap_or(default)` handles the missing-price case in one line.",
+        ],
+        checks: {
+          requiredAttributes: ["#[contract]", "#[contractimpl]"],
+          requiredFunctions: [{ name: "get_price_or_default", params: ["oracle_id", "asset", "default"] }],
+          requiredSubstrings: ["OracleContractClient", "unwrap_or"],
+          forbidPlaceholders: true,
+        },
       },
       {
         slug: "dao-governance-agora",
