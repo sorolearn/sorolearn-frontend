@@ -495,6 +495,21 @@ fn get_price_or_default(env: Env, oracle_id: Address, asset: Symbol, default: i1
         difficulty: "advanced",
         estimatedMinutes: 25,
         order: 4,
+        challenge:
+          "Write a function `has_passed` that takes yes_votes, no_votes, and quorum (all i128) and returns true only if yes_votes exceeds no_votes and total turnout meets quorum.",
+        starterCode: `fn has_passed(yes_votes: i128, no_votes: i128, quorum: i128) -> bool {
+    // your code here
+    todo!()
+}
+`,
+        hints: [
+          "Hint 1: A proposal needs strictly more yes than no votes: `yes_votes > no_votes`.",
+          "Hint 2: It also needs to clear quorum — total turnout (`yes_votes + no_votes`) must be at least `quorum`.",
+        ],
+        checks: {
+          requiredFunctions: [{ name: "has_passed", params: ["yes_votes", "no_votes", "quorum"] }],
+          forbidPlaceholders: true,
+        },
       },
       {
         slug: "security-patterns-argus",
