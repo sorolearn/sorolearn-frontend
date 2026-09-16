@@ -11,6 +11,21 @@ import {
   starterCodeFor,
   totalLessonCount,
 } from "./courses";
+import type { Lesson } from "@/types";
+
+// A lesson with none of the optional per-lesson fields set — every lesson in
+// COURSES has real content now, so the fallback behavior is tested against
+// this synthetic lesson instead of depending on the curriculum staying
+// incomplete (which is exactly what broke this file twice already).
+const GENERIC_LESSON: Lesson = {
+  slug: "generic",
+  title: "Generic",
+  description: "desc",
+  intro: "intro",
+  difficulty: "beginner",
+  estimatedMinutes: 10,
+  order: 1,
+};
 
 describe("getCourse", () => {
   it("finds a course by slug", () => {
@@ -50,8 +65,7 @@ describe("starterCodeFor", () => {
   });
 
   it("falls back to the generic starter otherwise", () => {
-    const lesson = getLesson("advanced", "amms-from-scratch")!;
-    expect(starterCodeFor(lesson)).toContain("pub struct Contract;");
+    expect(starterCodeFor(GENERIC_LESSON)).toContain("pub struct Contract;");
   });
 });
 
@@ -63,8 +77,7 @@ describe("hintsFor", () => {
   });
 
   it("falls back to the generic hints otherwise", () => {
-    const lesson = getLesson("advanced", "amms-from-scratch")!;
-    expect(hintsFor(lesson)).toEqual([
+    expect(hintsFor(GENERIC_LESSON)).toEqual([
       "Hint 1: Check the exact macro names — #[contract] and #[contractimpl].",
       "Hint 2: Every public function needs a matching signature in the impl block.",
     ]);
@@ -78,8 +91,7 @@ describe("challengeFor", () => {
   });
 
   it("falls back to a generic prompt otherwise", () => {
-    const lesson = getLesson("advanced", "amms-from-scratch")!;
-    expect(challengeFor(lesson)).toBe(
+    expect(challengeFor(GENERIC_LESSON)).toBe(
       "Follow the lesson above, then edit the contract until Run Tests passes."
     );
   });
@@ -92,8 +104,7 @@ describe("checksFor", () => {
   });
 
   it("falls back to defaultChecks (contract macros required) otherwise", () => {
-    const lesson = getLesson("advanced", "amms-from-scratch")!;
-    expect(checksFor(lesson)).toEqual({
+    expect(checksFor(GENERIC_LESSON)).toEqual({
       requiredAttributes: ["#[contract]", "#[contractimpl]"],
       forbidPlaceholders: true,
     });

@@ -555,6 +555,32 @@ impl WalletContract {
         difficulty: "advanced",
         estimatedMinutes: 25,
         order: 6,
+        challenge:
+          "Write an `upgrade` function that requires the admin's authorization, then upgrades the contract's code to new_wasm_hash using env.deployer().update_current_contract_wasm(...).",
+        starterCode: `#![no_std]
+use soroban_sdk::{contract, contractimpl, Address, BytesN, Env};
+
+#[contract]
+pub struct UpgradeableContract;
+
+#[contractimpl]
+impl UpgradeableContract {
+    pub fn upgrade(env: Env, admin: Address, new_wasm_hash: BytesN<32>) {
+        // your code here
+        todo!()
+    }
+}
+`,
+        hints: [
+          "Hint 1: Always `env.require_auth(&admin)` before an upgrade — an unauthenticated upgrade is a full takeover.",
+          "Hint 2: `env.deployer().update_current_contract_wasm(&new_wasm_hash)` swaps the code in place; storage is untouched.",
+        ],
+        checks: {
+          requiredAttributes: ["#[contract]", "#[contractimpl]"],
+          requiredFunctions: [{ name: "upgrade", params: ["admin", "new_wasm_hash"] }],
+          requiredSubstrings: ["require_auth", "update_current_contract_wasm"],
+          forbidPlaceholders: true,
+        },
       },
     ],
   },
