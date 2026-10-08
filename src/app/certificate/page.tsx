@@ -111,14 +111,17 @@ export default function CertificatePage() {
               >
                 {connecting ? "Connecting…" : "Connect Freighter"}
               </button>
-              <div className="text-xs text-ink-muted">or paste your Stellar address</div>
+              <label htmlFor="stellar-address" className="text-xs text-ink-muted">
+                or paste your Stellar address
+              </label>
               <div className="w-full flex gap-2">
                 <input
+                  id="stellar-address"
                   type="text"
                   value={addressInput}
                   onChange={(e) => setAddressInput(e.target.value)}
                   placeholder="G..."
-                  className="flex-1 bg-surface border border-border rounded-btn px-3 py-2 text-sm font-mono text-ink outline-none"
+                  className="flex-1 bg-surface border border-border rounded-btn px-3 py-2 text-sm font-mono text-ink focus:border-accent transition"
                 />
                 <button
                   type="button"
@@ -128,7 +131,7 @@ export default function CertificatePage() {
                   Use
                 </button>
               </div>
-              {walletError && <div className="text-xs text-accent">{walletError}</div>}
+              {walletError && <div className="text-xs text-accent-text">{walletError}</div>}
             </div>
           )}
 
@@ -152,7 +155,7 @@ export default function CertificatePage() {
               >
                 Mint certificate NFT
               </button>
-              {mintError && <div className="text-xs text-accent">{mintError}</div>}
+              {mintError && <div className="text-xs text-accent-text">{mintError}</div>}
             </div>
           )}
 
