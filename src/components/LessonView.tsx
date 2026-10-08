@@ -23,44 +23,82 @@ export default function LessonView({ course, lesson }: { course: Course; lesson:
   const hints = hintsFor(lesson);
   const shown = hintsShown[id] ?? 0;
   const [resetCount, setResetCount] = useState(0);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   function resetToStarter() {
     setCode(id, starterCodeFor(lesson));
     setResetCount((c) => c + 1);
   }
 
+  const sidebar = (
+    <div
+      id="lesson-sidebar"
+      onKeyDown={(e) => {
+        if (e.key === "Escape") setMobileNavOpen(false);
+      }}
+      className={`fixed lg:sticky top-[65px] left-0 w-[270px] flex-shrink-0 bg-surface-alt border-r border-border py-6 h-[calc(100vh-65px)] overflow-y-auto z-30 lg:z-auto transition-transform duration-200 lg:translate-x-0 ${
+        mobileNavOpen ? "translate-x-0" : "-translate-x-full"
+      }`}
+    >
+      {COURSES.map((c) => (
+        <div key={c.slug} className="px-5 pb-5">
+          <div className="text-[11px] font-bold uppercase tracking-wide text-ink-muted mb-2.5">
+            {levelLabel[c.difficulty]}
+          </div>
+          {c.lessons.map((l) => {
+            const lId = lessonId(c.slug, l.slug);
+            const isCurrent = lId === id;
+            const done = completed[lId];
+            return (
+              <Link
+                key={l.slug}
+                href={`/course/${c.slug}/${l.slug}`}
+                onClick={() => setMobileNavOpen(false)}
+                className="flex items-center gap-2 px-2.5 py-2 rounded-lg text-[13px]"
+                style={{
+                  color: isCurrent ? "var(--color-accent-text)" : "var(--color-text)",
+                  fontWeight: isCurrent ? 700 : 400,
+                  background: isCurrent ? "var(--color-accent-100)" : "transparent",
+                }}
+              >
+                <span className="w-3.5 flex-shrink-0 text-accent-text" aria-hidden="true">
+                  {done ? "✓" : isCurrent ? "›" : ""}
+                </span>
+                <span>
+                  {l.title}
+                  {done && <span className="sr-only"> (completed)</span>}
+                  {isCurrent && <span className="sr-only"> (current lesson)</span>}
+                </span>
+              </Link>
+            );
+          })}
+        </div>
+      ))}
+    </div>
+  );
+
   return (
     <div className="flex items-start">
-      {/* Sidebar */}
-      <div className="w-[270px] flex-shrink-0 bg-surface-alt border-r border-border py-6 h-[calc(100vh-65px)] overflow-y-auto sticky top-[65px] hidden lg:block">
-        {COURSES.map((c) => (
-          <div key={c.slug} className="px-5 pb-5">
-            <div className="text-[11px] font-bold uppercase tracking-wide text-ink-muted mb-2.5">
-              {levelLabel[c.difficulty]}
-            </div>
-            {c.lessons.map((l) => {
-              const lId = lessonId(c.slug, l.slug);
-              const isCurrent = lId === id;
-              const done = completed[lId];
-              return (
-                <Link
-                  key={l.slug}
-                  href={`/course/${c.slug}/${l.slug}`}
-                  className="flex items-center gap-2 px-2.5 py-2 rounded-lg text-[13px]"
-                  style={{
-                    color: isCurrent ? "var(--color-accent)" : "var(--color-text)",
-                    fontWeight: isCurrent ? 700 : 400,
-                    background: isCurrent ? "var(--color-accent-100)" : "transparent",
-                  }}
-                >
-                  <span className="w-3.5 flex-shrink-0 text-accent">{done ? "✓" : isCurrent ? "›" : ""}</span>
-                  <span>{l.title}</span>
-                </Link>
-              );
-            })}
-          </div>
-        ))}
-      </div>
+      {/* Mobile nav toggle */}
+      <button
+        type="button"
+        onClick={() => setMobileNavOpen(true)}
+        aria-expanded={mobileNavOpen}
+        aria-controls="lesson-sidebar"
+        className="lg:hidden fixed bottom-4 left-4 z-20 cursor-pointer px-4 py-2.5 bg-accent text-white text-sm font-bold rounded-pill shadow-card-hover"
+      >
+        Lessons
+      </button>
+      {mobileNavOpen && (
+        <button
+          type="button"
+          aria-label="Close lesson list"
+          onClick={() => setMobileNavOpen(false)}
+          className="lg:hidden fixed inset-0 bg-black/50 z-20 cursor-default"
+        />
+      )}
+
+      {sidebar}
 
       {/* Main content */}
       <div className="flex-1 px-6 md:px-12 py-10 flex flex-col gap-6 max-w-[820px]">
@@ -86,7 +124,7 @@ export default function LessonView({ course, lesson }: { course: Course; lesson:
             <button
               type="button"
               onClick={resetToStarter}
-              className="cursor-pointer text-xs font-semibold text-ink-muted hover:text-accent transition"
+              className="cursor-pointer text-xs font-semibold text-ink-muted hover:text-accent-text transition"
             >
               Reset to starter code
             </button>
@@ -106,13 +144,13 @@ export default function LessonView({ course, lesson }: { course: Course; lesson:
               {status === "running" ? "Running…" : "Run Tests"}
             </button>
             {status === "pass" && (
-              <div className="text-[13px] font-semibold text-accent">✓ All checks passed</div>
+              <div className="text-[13px] font-semibold text-accent-text">✓ All checks passed</div>
             )}
           </div>
           {status === "fail" && messages.length > 0 && (
             <ul className="flex flex-col gap-1 list-none m-0 p-0">
               {messages.map((message, i) => (
-                <li key={i} className="text-[13px] font-medium text-accent">
+                <li key={i} className="text-[13px] font-medium text-accent-text">
                   ✗ {message}
                 </li>
               ))}
@@ -124,7 +162,7 @@ export default function LessonView({ course, lesson }: { course: Course; lesson:
           <button
             type="button"
             onClick={() => unlockHint(id, hints.length)}
-            className="cursor-pointer text-[13px] font-semibold text-accent w-fit"
+            className="cursor-pointer text-[13px] font-semibold text-accent-text w-fit"
           >
             {shown >= hints.length ? "No more hints" : `Show hint (${shown + 1} of ${hints.length})`}
           </button>
