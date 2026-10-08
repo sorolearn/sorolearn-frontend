@@ -94,7 +94,7 @@ export default function Home() {
       {/* Why section */}
       <div className="max-w-[1160px] mx-auto w-full px-8 pt-18 pb-4">
         <div className="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-10">
-          <div className="text-[13px] font-bold uppercase tracking-wide text-accent">Why SoroLearn</div>
+          <div className="text-[13px] font-bold uppercase tracking-wide text-accent-text">Why SoroLearn</div>
           <div className="flex flex-col gap-4 max-w-2xl">
             <p className="text-base leading-relaxed text-ink">
               Soroban is unique in the blockchain world — it uses Rust and WebAssembly instead of Solidity and

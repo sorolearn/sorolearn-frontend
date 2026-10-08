@@ -20,11 +20,13 @@ export default function LessonGrid({ courseSlug, lessons }: { courseSlug: string
           >
             <div className="flex items-center justify-between">
               <div className="text-xs text-ink-muted">{lesson.estimatedMinutes} min</div>
-              {done && <div className="text-[11px] font-bold text-accent">✓ Done</div>}
+              {done && <div className="text-[11px] font-bold text-accent-text">✓ Done</div>}
             </div>
             <div className="flex items-end justify-between gap-2.5">
               <div className="text-[15px] font-semibold leading-tight text-ink">{lesson.title}</div>
-              <div className="text-base text-accent flex-shrink-0">→</div>
+              <div className="text-base text-accent-text flex-shrink-0" aria-hidden="true">
+                →
+              </div>
             </div>
           </Link>
         );

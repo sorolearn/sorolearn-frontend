@@ -13,31 +13,31 @@ export default function Footer() {
 
         <div className="flex flex-col gap-2.5">
           <div className="text-xs font-bold uppercase tracking-wide text-ink-muted">Learning</div>
-          <Link href="/course/beginner" className="text-[13px] text-ink hover:text-accent transition">
+          <Link href="/course/beginner" className="text-[13px] text-ink hover:text-accent-text transition">
             Beginner path
           </Link>
-          <Link href="/course/intermediate" className="text-[13px] text-ink hover:text-accent transition">
+          <Link href="/course/intermediate" className="text-[13px] text-ink hover:text-accent-text transition">
             Intermediate path
           </Link>
-          <Link href="/course/advanced" className="text-[13px] text-ink hover:text-accent transition">
+          <Link href="/course/advanced" className="text-[13px] text-ink hover:text-accent-text transition">
             Advanced path
           </Link>
         </div>
 
         <div className="flex flex-col gap-2.5">
           <div className="text-xs font-bold uppercase tracking-wide text-ink-muted">Community</div>
-          <Link href="/leaderboard" className="text-[13px] text-ink hover:text-accent transition">
+          <Link href="/leaderboard" className="text-[13px] text-ink hover:text-accent-text transition">
             Leaderboard
           </Link>
           <a
             href="https://github.com/sorolearn/sorolearn/blob/main/CONTRIBUTING.md"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[13px] text-ink hover:text-accent transition"
+            className="text-[13px] text-ink hover:text-accent-text transition"
           >
             Contributing content
           </a>
-          <Link href="/certificate" className="text-[13px] text-ink hover:text-accent transition">
+          <Link href="/certificate" className="text-[13px] text-ink hover:text-accent-text transition">
             On-chain certificates
           </Link>
         </div>
@@ -48,7 +48,7 @@ export default function Footer() {
             href="https://github.com/sorolearn/sorolearn"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[13px] text-ink hover:text-accent transition"
+            className="text-[13px] text-ink hover:text-accent-text transition"
           >
             GitHub
           </a>
@@ -56,7 +56,7 @@ export default function Footer() {
             href="https://github.com/sorolearn/sorolearn/blob/main/LICENSE"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[13px] text-ink hover:text-accent transition"
+            className="text-[13px] text-ink hover:text-accent-text transition"
           >
             MIT License
           </a>

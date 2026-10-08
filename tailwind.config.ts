@@ -24,6 +24,7 @@ const config: Config = {
           hover: "var(--color-accent-hover)",
           100: "var(--color-accent-100)",
           700: "var(--color-accent-700)",
+          text: "var(--color-accent-text)",
         },
         code: {
           bg: "var(--color-code-bg)",

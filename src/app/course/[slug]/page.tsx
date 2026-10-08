@@ -13,7 +13,7 @@ export default async function CoursePage({ params }: Props) {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
-      <p className="text-accent font-semibold mb-2 uppercase text-sm tracking-wide">{course.difficulty}</p>
+      <p className="text-accent-text font-semibold mb-2 uppercase text-sm tracking-wide">{course.difficulty}</p>
       <h1 className="text-4xl font-bold mb-4 text-ink">{course.title}</h1>
       <p className="text-ink-muted mb-10">{course.description}</p>
 
