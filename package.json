@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "keywords": [
     "stellar",
@@ -35,6 +36,7 @@
     "@types/node": "^24.0.0",
     "@types/react": "^19.2.8",
     "@types/react-dom": "^19.2.4",
+    "@vitest/coverage-v8": "^5.0.3",
     "autoprefixer": "^10.4.0",
     "eslint": "^9.0.0",
     "eslint-config-next": "^16.3.0",

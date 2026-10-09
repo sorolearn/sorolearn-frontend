@@ -33,8 +33,16 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Test
-        run: npm test
+      - name: Test with coverage
+        run: npm run test:coverage
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-coverage
+          path: frontend/coverage/
+          retention-days: 14
 
       - name: Build
         run: npm run build
@@ -53,6 +61,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         with:
           targets: wasm32v1-none
+          components: llvm-tools-preview
 
       - name: Cache cargo
         uses: actions/cache@v4
@@ -63,8 +72,19 @@ jobs:
             contract/certificate/target
           key: ${{ runner.os }}-cargo-${{ hashFiles('contract/certificate/Cargo.lock') }}
 
-      - name: Test
-        run: cargo test
+      - name: Install cargo-llvm-cov
+        uses: taiki-e/install-action@cargo-llvm-cov
+
+      - name: Test with coverage
+        run: cargo llvm-cov --lcov --output-path lcov.info --summary-only
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: contract-coverage
+          path: contract/certificate/lcov.info
+          retention-days: 14
 
       - name: Build wasm
         run: cargo build --target wasm32v1-none --release
