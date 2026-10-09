@@ -1,6 +1,6 @@
 # SoroLearn
 
-SoroLearn is an open-source, interactive education platform that teaches developers how to build Soroban smart contracts in Rust — through hands-on coding challenges, in-browser execution, structured learning paths, and community-contributed content. No local environment needed to start learning.
+SoroLearn is an open-source, interactive education platform that teaches developers how to build Soroban smart contracts in Rust — through hands-on coding challenges, an in-browser editor with auto-graded structural checks, structured learning paths, and community-contributed content. No local environment needed to start learning.
 
 ---
 
@@ -16,17 +16,17 @@ At the same time, the Stellar Development Foundation is actively trying to onboa
 
 ### Learning
 - **Structured courses** — progressive curriculum from Rust basics → Soroban fundamentals → advanced DeFi patterns
-- **Interactive editor** — write and run Soroban contract code directly in the browser (no local Rust install needed)
-- **Auto-graded challenges** — submit your solution and get instant, automated feedback
+- **Interactive editor** — write Soroban contract code directly in the browser with real syntax highlighting (Monaco), no local Rust install needed
+- **Auto-graded challenges** — static analysis checks your solution's structure (required macros, function signatures, no leftover placeholders) and gives instant, specific feedback — not full compilation, see Roadmap
 - **Hints system** — stuck? unlock hints without spoiling the full solution
 
 ### Community
-- **Community leaderboard** — see top contributors and learners
+- **Leaderboard** — tracks your own session progress today; a real shared leaderboard needs a backend, which doesn't exist yet (see Roadmap)
 - **On-chain certificates** — earn an NFT certificate on Stellar when you complete a course
 - **Community content** — anyone can contribute new lessons and challenges via pull request
 
 ### Platform
-- **Progress tracking** — your progress is saved and synced across devices
+- **Progress tracking** — saved locally in your browser; not yet synced across devices (needs real accounts, see Roadmap)
 - **Mobile-friendly** — learn on any device
 - **Dark mode** — because developers demand it
 
@@ -73,15 +73,16 @@ Contract ID: `CCVFIMTLHN2YFVKFITJYU4PWDIGNG2Q7AWWF4GPKBUBQOJEOGRDTIK5K`
 ┌─────────────────────────────────────────────────────────┐
 │              Browser (Next.js + Monaco Editor)          │
 │                                                         │
-│   Lesson Content  │  Code Editor  │  Test Runner UI     │
+│   Lesson Content  │  Code Editor  │  Static-Analysis    │
+│   (courses.ts)    │  (Monaco)     │  Grader (grader.ts) │
 └─────────────────────────────────────────────────────────┘
-         │                  │
-         ▼                  ▼
-┌────────────────┐  ┌────────────────────────────────────┐
-│  MDX Lessons   │  │   In-Browser Soroban Sandbox       │
-│  (content/*)   │  │   (WASM compiled in the browser    │
-│                │  │    via WebAssembly + WASI)          │
-└────────────────┘  └────────────────────────────────────┘
+                             │
+                             ▼ learner provides an address
+                   ┌─────────────────────────┐
+                   │ Next.js API route        │
+                   │ (admin key never leaves  │
+                   │  the server)             │
+                   └─────────────────────────┘
                              │
                              ▼
                    ┌─────────────────────┐
@@ -91,6 +92,8 @@ Contract ID: `CCVFIMTLHN2YFVKFITJYU4PWDIGNG2Q7AWWF4GPKBUBQOJEOGRDTIK5K`
                    │  course completion) │
                    └─────────────────────┘
 ```
+
+The grader is static analysis, not execution — it checks a submission's structure (macros, signatures, no leftover `todo!()`s), not that it actually compiles or runs. Real sandboxed compilation is intentionally not built yet; see Roadmap.
 
 ---
 
@@ -110,17 +113,20 @@ sorolearn/
 │   │   │   ├── course/
 │   │   │   │   └── [slug]/[lessonSlug]/page.tsx
 │   │   │   ├── leaderboard/page.tsx
-│   │   │   └── certificate/page.tsx
+│   │   │   ├── certificate/page.tsx
+│   │   │   └── api/certificate/  # mint/status routes (admin key lives server-side only)
 │   │   ├── components/
-│   │   │   ├── Editor.tsx        # In-browser code editor
+│   │   │   ├── Editor.tsx        # In-browser code editor (Monaco)
 │   │   │   └── LessonView.tsx    # Challenge, editor, test runner, hints
-│   │   ├── content/               # Lesson content (Markdown)
+│   │   ├── content/               # Lesson writeups (Markdown, not auto-rendered — see Content Structure)
 │   │   │   ├── beginner/
 │   │   │   ├── intermediate/
 │   │   │   └── advanced/
 │   │   └── lib/
-│   │       ├── courses.ts        # Curriculum registry
-│   │       └── stellar.ts        # Certificate NFT minting
+│   │       ├── courses.ts        # Curriculum registry (the gradable part of each lesson)
+│   │       ├── grader.ts         # Static-analysis auto-grader
+│   │       ├── stellar.ts        # Client-side wrapper around api/certificate/*
+│   │       └── certificate-contract.ts  # Server-only: signs mint txs with the admin key
 │   └── public/
 ├── CONTRIBUTING.md
 └── README.md
@@ -130,70 +136,76 @@ sorolearn/
 
 ## Getting Started
 
+### Prerequisites
+
+- Node.js 20+
+- Rust + the `wasm32v1-none` target and the `stellar` CLI, only if you're working on `contract/`
+
+### Run the frontend locally
+
+```bash
+git clone https://github.com/sorolearn/sorolearn.git
+cd sorolearn/frontend
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000). Certificate minting needs `CERTIFICATE_ADMIN_SECRET` and `CERTIFICATE_CONTRACT_ID` set locally (see `src/lib/certificate-contract.ts`) — everything else works without them.
+
+### Test and build
+
+```bash
+npm run lint
+npm test               # or npm run test:coverage
+npm run build
+```
+
+### Build and test the contract
+
+```bash
+cd sorolearn/contract/certificate
+cargo test
+cargo llvm-cov --summary-only   # coverage
+stellar contract build
+```
+
+---
+
 ## Content Structure
 
-Each lesson lives in `frontend/src/content/` as an MDX file with the following frontmatter:
+Each lesson has two parts, and they're not the same file:
 
-```mdx
----
-title: "Your First Soroban Contract"
-path: beginner/first-contract
-difficulty: beginner
-estimatedMinutes: 20
----
-
-## Introduction
-
-...lesson content here...
-
-## Challenge
-
-Write a Soroban contract that stores and retrieves a number.
-
-### Starter Code
-
-```rust
-#![no_std]
-use soroban_sdk::{contract, contractimpl, Env};
-
-#[contract]
-pub struct MyContract;
-
-#[contractimpl]
-impl MyContract {
-    // your code here
-}
-```
-
-### Tests
-
-```rust
-// tests that must pass for the challenge to be marked complete
-```
-```
+- **`frontend/src/content/<path>/<slug>.md`** — the lesson's explanatory writeup (background, a worked example, the challenge description). Plain Markdown, not MDX, and not parsed or rendered by the app directly — it's the source a lesson's `intro`/`challenge` text is written from, and what a learner reads on the lesson page.
+- **`frontend/src/lib/courses.ts`** — the actual registry the app reads: each lesson's `intro`, `challenge`, `starterCode`, `hints`, and `checks` (the structural requirements the auto-grader verifies — required attributes/macros, function signatures, forbidden placeholders, required substrings; see `frontend/src/lib/grader.ts`). A lesson with content in the `.md` file but nothing in `courses.ts` will render with generic starter code and generic hints, which has bitten this project more than once.
 
 ---
 
 ## Contributing Content
 
-The best way to contribute is to add new lessons and challenges. All content lives in `frontend/src/content/` as MDX files. You don't need to know how the platform works — just write a lesson following the structure above and open a pull request.
+The best way to contribute is to add new lessons and challenges:
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for the full content guidelines.
+1. Write the lesson as a `.md` file under `frontend/src/content/<beginner|intermediate|advanced>/<slug>.md`, following the structure of an existing lesson in the same path.
+2. Add the matching entry to `frontend/src/lib/courses.ts` — `intro`, `challenge`, `starterCode`, `hints`, and `checks`. Without this step the lesson exists but isn't actually gradable.
+3. Open a pull request. CI runs typecheck, lint, the test suite, and a build on every PR.
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for the full guidelines.
 
 ---
 
 ## Roadmap
 
-- [ ] Course catalog homepage
-- [ ] Beginner learning path (5 lessons)
-- [ ] In-browser Soroban code editor (Monaco)
-- [ ] Auto-graded challenge runner
-- [ ] Intermediate learning path (8 lessons)
-- [ ] Progress tracking (local storage → authenticated)
-- [ ] On-chain NFT certificate minting
-- [ ] Community leaderboard
-- [ ] Advanced DeFi patterns course
-- [ ] Community content submission workflow
+- [x] Course catalog homepage
+- [x] Beginner learning path (4 lessons)
+- [x] In-browser Soroban code editor (Monaco)
+- [x] Auto-graded challenge runner (static analysis — not full compilation; see `grader.ts`)
+- [x] Intermediate learning path (6 lessons)
+- [x] Advanced learning path (6 lessons)
+- [x] Progress tracking (local storage)
+- [x] On-chain NFT certificate minting (deployed to testnet, admin-signed)
+- [ ] Progress tracking across devices (needs real accounts/backend)
+- [ ] Community leaderboard backed by real accounts, not local session state
+- [ ] Sandboxed in-browser/server-side contract execution (real compilation, not static analysis — needs a container/timeout/resource-limit story first)
+- [ ] Community content submission workflow beyond "open a PR"
 
 ---
 
