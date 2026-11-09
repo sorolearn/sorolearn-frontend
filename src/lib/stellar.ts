@@ -1,6 +1,9 @@
 // Stellar integration: certificate NFT minting on course completion.
-// Signing happens server-side (the platform admin key never reaches the
-// browser) — this just calls the /api/certificate routes.
+// Signing happens in sorolearn-backend (the platform admin key never reaches
+// the browser). This just calls the backend's /api/certificate routes.
+
+// NEXT_PUBLIC_ vars are inlined at build time, so set this before `npm run build`.
+const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000").replace(/\/+$/, "");
 
 export interface CertificateMetadata {
   recipient: string;
@@ -15,7 +18,7 @@ export class CertificateAlreadyMintedError extends Error {}
  * Returns the transaction hash on success.
  */
 export async function mintCertificate(meta: CertificateMetadata): Promise<string> {
-  const res = await fetch("/api/certificate/mint", {
+  const res = await fetch(`${API_URL}/api/certificate/mint`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ learner: meta.recipient, course: meta.courseSlug }),
@@ -37,7 +40,7 @@ export async function mintCertificate(meta: CertificateMetadata): Promise<string
  */
 export async function hasCertificate(address: string, courseSlug: string): Promise<boolean> {
   const res = await fetch(
-    `/api/certificate/status?learner=${encodeURIComponent(address)}&course=${encodeURIComponent(courseSlug)}`
+    `${API_URL}/api/certificate/status?learner=${encodeURIComponent(address)}&course=${encodeURIComponent(courseSlug)}`
   );
   if (!res.ok) return false;
   const data = await res.json().catch(() => ({}));
